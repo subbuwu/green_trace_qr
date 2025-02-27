@@ -1,0 +1,10 @@
+# Root .gitignore
+# Global ignores
+.DS_Store
+*.log
+
+# Avoid ignoring frontend's node_modules since it has its own .gitignore
+# If you have other node projects at root level, use:
+/node_modules
+/.env
+/.env.local
