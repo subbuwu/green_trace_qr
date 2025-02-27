@@ -8,3 +8,31 @@
 /node_modules
 /.env
 /.env.local
+
+# Dependencies
+/backend/node_modules/
+
+# Build files
+/backend/dist/
+/backend/build/
+
+# Environment variables
+/backend/.env
+
+# Logs
+/backend/logs/
+/backend/*.log
+/backend/npm-debug.log*
+
+# IDE files
+/backend/.idea/
+/backend/.vscode/
+/backend/*.sublime-project
+/backend/*.sublime-workspace
+
+# OS files
+/backend/.DS_Store
+/backend/Thumbs.db
+
+# TypeScript cache
+/backend/*.tsbuildinfo
