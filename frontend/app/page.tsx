@@ -7,7 +7,8 @@ export default function Home() {
     router.push("login")
   }
   return (
-    <div className="flex flex-col justify-center h-screen items-center">
+    <div className="flex flex-col justify-center h-screen items-center"
+    style={{backgroundImage:'url(/bg1_image.jpg)',backgroundSize:'cover', backgroundPosition: 'center'}}>
       <div className="text-6xl mb-4">
         GreenTrace
       </div>
