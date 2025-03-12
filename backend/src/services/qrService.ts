@@ -25,9 +25,9 @@ class QRService {
         timestamp: Date.now()
       };
 
-      const signedPayload = this.signPayload(payload);
-      
-      const qrCodeImage = await QRCode.toDataURL(JSON.stringify(signedPayload));
+      const payloadString = Buffer.from(JSON.stringify(payload)).toString('base64');
+
+      const qrCodeImage = await QRCode.toDataURL(payloadString);
       
       await prisma.recycleEntry.create({
         data: {
@@ -36,29 +36,33 @@ class QRService {
           wasteType,
           quantity,
           qrCode: qrCodeImage,
-          qrPayload: JSON.stringify(signedPayload)
+          qrPayload: JSON.stringify(payload)
         }
       });
+      const res = { qrCodeImage, entryId };
 
-      return { qrCodeImage, entryId };
+      return res;
     } catch (error) {
       console.error('Error generating QR code:', error);
       throw new Error('Failed to generate QR code');
     }
   }
 
-  async verifyQR(qrPayloadString: string, businessId: string): Promise<{ verified: boolean, entryDetails?: any }> {
+  async verifyQR(jwtPayload: string, businessId: string): Promise<{ verified: boolean, entryDetails?: any }> {
     try {
-      const signedPayload = JSON.parse(qrPayloadString);
+      // first decode the payload from jwt
+      const initialPayload = Buffer.from(jwtPayload, 'base64').toString('utf-8');
+
+      const signedPayload = JSON.parse(initialPayload);
+      console.log(signedPayload)
       
       if (!this.verifySignature(signedPayload)) {
         return { verified: false };
       }
-      
-      const payload = signedPayload.data as QRPayload;
+
       
       const entry = await prisma.recycleEntry.findUnique({
-        where: { id: payload.entryId }
+        where: { id: signedPayload.entryId }
       });
 
       if (!entry) {
@@ -69,10 +73,10 @@ class QRService {
         return { verified: false, entryDetails: { message: 'QR code already used' } };
       }
       
-      const points = this.calculatePoints(payload.wasteType, payload.quantity);
+      const points = this.calculatePoints(signedPayload.wasteType, signedPayload.quantity);
       
       const updatedEntry = await prisma.recycleEntry.update({
-        where: { id: payload.entryId },
+        where: { id: signedPayload.entryId },
         data: {
           status: 'verified',
           points,

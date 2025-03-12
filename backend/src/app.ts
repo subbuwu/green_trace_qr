@@ -7,7 +7,7 @@ import qrRoutes from './routes/qrRoutes';
 dotenv.config();
 
 const app: Application = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 

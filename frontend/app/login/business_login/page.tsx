@@ -1,49 +1,104 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { ChevronLeft, Building2 } from "lucide-react"
 
-type Props = {}
+const BusinessLoginPage = () => {
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-const BusinessLoginPage = (props: Props) => {
+  const handleBack = () => {
+    router.push('/login')
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Handle login logic here
+    console.log("Business login with:", email, password)
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-3xl mb-8">Business Login</h1>
-      <form className="w-full max-w-md p-6 bg-white rounded-lg shadow-2xl">
-        <div className="mb-4">
-          <label className="block text-black text-sm font-bold mb-2" htmlFor="email">
-            Email
-          </label>
-          <input 
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline" 
-            id="email" 
-            type="email" 
-            placeholder="Email"
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-black text-sm font-bold mb-2" htmlFor="password">
-            Password
-          </label>
-          <input 
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-black mb-3 leading-tight focus:outline-none focus:shadow-outline" 
-            id="password" 
-            type="password" 
-            placeholder="******************"
-          />
-        </div>
-        <div className="flex items-center justify-between">
-          <button 
-            className="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-150 ease-in-out" 
-            type="button"
-          >
-            Sign In
-          </button>
-          <a className="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800" href="#">
-            Forgot Password?
-          </a>
-          <a className="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800" href="#">
-            New User? Sign Up
-          </a>
-        </div>
-      </form>
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Header with back button */}
+      <header className="border-b bg-white py-4 px-6 flex items-center">
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={handleBack}
+          className="text-gray-600"
+        >
+          <ChevronLeft className="h-4 w-4 mr-2" /> Back
+        </Button>
+      </header>
+      
+      <div className="flex flex-grow items-center justify-center p-6">
+        <Card className="w-full max-w-md shadow-lg border-0">
+          <CardHeader className="space-y-1 pb-4">
+            <div className="flex justify-center mb-4">
+              <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center">
+                <Building2 className="h-6 w-6 text-gray-700" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl font-bold text-center">Business Login</CardTitle>
+          </CardHeader>
+          
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="company@example.com" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="border-gray-300"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+                  <Button variant="link" size="sm" className="p-0 h-auto text-green-600">
+                    Forgot Password?
+                  </Button>
+                </div>
+                <Input 
+                  id="password" 
+                  type="password" 
+                  placeholder="••••••••" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="border-gray-300"
+                  required
+                />
+              </div>
+              
+              <Button 
+                type="submit" 
+                className="w-full bg-black hover:bg-gray-800 text-white"
+              >
+                Sign In
+              </Button>
+              
+              <div className="text-sm text-gray-500 text-center mt-6">
+                Don't have an account?
+                <div className="mt-2">
+                  <a href="#" className="text-green-600 font-medium mr-4">Contact sales</a>
+                  <span>or</span>
+                  <a href="#" className="text-green-600 font-medium ml-4">Get free trial</a>
+                </div>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
