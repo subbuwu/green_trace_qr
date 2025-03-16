@@ -13,6 +13,10 @@ export default function Home() {
     router.push("/login");
   }
 
+  function handleLearnMore() {
+    router.push("/learnmore");
+  }
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background with overlay gradient */}
@@ -67,6 +71,7 @@ export default function Home() {
           </Button>
           
           <Button 
+            onClick={handleLearnMore}
             variant="outline" 
             size="lg"
             className="text-lg border-green-400 text-black hover:text-white hover:bg-green-800/40 px-8 py-6 rounded-full shadow-lg backdrop-blur-sm transition-all duration-300"
