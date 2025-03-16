@@ -42,7 +42,7 @@ export default function Home() {
           className="flex items-center gap-2 mb-6"
         >
           <Leaf className="h-12 w-12 text-green-400" />
-          <h1 className="text-6xl md:text-7xl font-extrabold text-white tracking-tight">
+          <h1 className="text-6xl md:text-7xl font-extrabold text-white tracking-tight pointer-cursor">
             Green<span className="text-green-400">Trace</span>
           </h1>
         </motion.div>
