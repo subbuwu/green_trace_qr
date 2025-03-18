@@ -17,7 +17,6 @@ const LoginPage = () => {
   }
 
   return (
-    <SidebarProvider>
     <div className="min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
       <Navbar />
       
@@ -82,7 +81,6 @@ const LoginPage = () => {
         </p>
       </div>
     </div>
-    </SidebarProvider>
   )
 }
 
