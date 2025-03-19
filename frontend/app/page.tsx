@@ -30,9 +30,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 to-green-950/80" />
       </div>
-      
-
-      
+            
       {/* Main content */}
       <div className="relative z-20 flex flex-col items-center justify-center h-screen px-4 text-center">
         <motion.div
