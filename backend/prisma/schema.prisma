@@ -10,9 +10,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  role          UserRole  @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  customer      Customer?
+  business      Business?
+  recycleEntries RecycleEntry[]
+}
+
+model Business {
+  id            String    @id @default(uuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id])
+  businessName  String
+  address       String
+  phone         String
+  verified      Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  verifiedEntries RecycleEntry[] @relation("BusinessVerification")
+}
+
+model Customer {
+  id            String    @id @default(uuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id])
+  firstName     String
+  lastName      String
+  phone         String
+  totalPoints   Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum UserRole {
+  CUSTOMER
+  BUSINESS
+}
+
 model RecycleEntry {
   id                  String    @id @default(uuid())
   userId              String
+  user                User      @relation(fields: [userId], references: [id])
   wasteType           String
   quantity            Float
   status              String    @default("pending")
@@ -21,6 +64,7 @@ model RecycleEntry {
   qrPayload           String
   verifiedAt          DateTime?
   verifiedByBusinessId String?
+  verifiedByBusiness   Business? @relation("BusinessVerification", fields: [verifiedByBusinessId], references: [id])
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 

@@ -1,18 +1,17 @@
 import React from 'react'
-import { Button } from './ui/button'
 import { Leaf } from 'lucide-react'
-import { SidebarTrigger } from './ui/sidebar'
+
 
 
 export const Navbar = () => {
   return (
-      <header className="border-b border-b-gray-300 bg-white py-4 px-6 pl-2 flex items-center">
-                  <SidebarTrigger  className=""/>
-        <div className="flex items-center justify-center flex-1">
+      <header className="border-b border-b-gray-300 bg-white relative py-4 px-6 pl-2 flex items-center">
+        <div className="flex items-center justify-center flex-1 ">
 
-          <h1 className="text-4xl md:text-5xl font-extrabold text-black tracking-tight flex items-center justify-center gap-0.5">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-black tracking-tight flex items-center justify-center gap-0.5">
           <Leaf className="h-10 w-10 text-green-900" /> Green<span className="text-green-400">Trace</span>
           </h1>
+
           
         </div>
         

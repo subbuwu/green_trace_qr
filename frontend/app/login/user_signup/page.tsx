@@ -6,42 +6,50 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ChevronLeft, Code } from "lucide-react"
-import { authService, ApiError } from '@/services/authServices'
+import { authService } from '@/services/authServices'
 import { toast } from 'sonner'
 
-const UserLoginPage = () => {
+const UserSignupPage = () => {
   const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  })
   const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string[]>>({})
 
   const handleBack = () => {
     router.push('/login')
   }
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setErrors({})
     
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match")
+      return
+    }
+
     try {
       setLoading(true)
-      await authService.login({
-        email,
-        password,
+      await authService.signup({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
         userType: 'user'
       })
-      toast.success("Login successful!")
+      toast.success("Account created successfully!")
       router.push('/dashboard')
     } catch (error: any) {
-      const apiError = error as ApiError;
-      if (apiError.errors) {
-        setErrors(apiError.errors);
-        // Show the main error message
-        toast.error(apiError.message);
-      } else {
-        toast.error(apiError.message);
-      }
+      toast.error(error.message)
     } finally {
       setLoading(false)
     }
@@ -49,7 +57,6 @@ const UserLoginPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header with back button */}
       <header className="border-b bg-white py-4 px-6 flex items-center">
         <Button 
           variant="ghost" 
@@ -69,61 +76,79 @@ const UserLoginPage = () => {
                 <Code className="h-6 w-6 text-gray-700" />
               </div>
             </div>
-            <CardTitle className="text-2xl font-bold text-center">User Login</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
           </CardHeader>
           
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
+                <Input 
+                  id="name" 
+                  name="name"
+                  type="text" 
+                  placeholder="John Doe" 
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="border-gray-300"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">Email</Label>
                 <Input 
                   id="email" 
+                  name="email"
                   type="email" 
-                  placeholder="User@example.com" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`border-gray-300 ${errors.email ? 'border-red-500' : ''}`}
+                  placeholder="user@example.com" 
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="border-gray-300"
                   required
                 />
-                {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email[0]}</p>
-                )}
               </div>
               
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                  <Button variant="link" size="sm" className="p-0 h-auto text-green-600">
-                    Forgot Password?
-                  </Button>
-                </div>
+                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
                 <Input 
                   id="password" 
+                  name="password"
                   type="password" 
                   placeholder="••••••••" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`border-gray-300 ${errors.password ? 'border-red-500' : ''}`}
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="border-gray-300"
                   required
                 />
-                {errors.password && (
-                  <p className="text-sm text-red-500">{errors.password[0]}</p>
-                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</Label>
+                <Input 
+                  id="confirmPassword" 
+                  name="confirmPassword"
+                  type="password" 
+                  placeholder="••••••••" 
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="border-gray-300"
+                  required
+                />
               </div>
               
               <Button 
                 type="submit" 
-                variant="outline"
-                className="w-full border-black text-black hover:bg-gray-100"
+                className="w-full bg-black hover:bg-gray-800 text-white"
                 disabled={loading}
               >
-                {loading ? "Signing in..." : "Sign In"}
+                {loading ? "Creating Account..." : "Create Account"}
               </Button>
               
               <div className="text-sm text-gray-500 text-center mt-6">
-                Don't have an account?
+                Already have an account?
                 <div className="mt-2">
-                  <a href="/login/user_signup" className="text-green-600 font-medium">Sign up</a>
+                  <a href="/login/user_login" className="text-green-600 font-medium">Sign in</a>
                 </div>
               </div>
             </form>
@@ -134,4 +159,4 @@ const UserLoginPage = () => {
   )
 }
 
-export default UserLoginPage
+export default UserSignupPage 
