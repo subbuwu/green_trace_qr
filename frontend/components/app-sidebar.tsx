@@ -4,6 +4,7 @@ import {
   Home, 
   QrCode, 
   Package,
+  ChartBarDecreasing
 } from "lucide-react"
 
 import {
@@ -32,7 +33,7 @@ const items = [
   {
     title: "Profile & Rankings",
     url: "/dashboard/rankings",
-    icon: QrCode,
+    icon: ChartBarDecreasing,
   },
   {
     title: "Business",
