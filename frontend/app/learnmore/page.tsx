@@ -30,39 +30,88 @@ const LearnmorePage = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 to-green-950/80" />
     </div>
           
-    {/* Main content */}
-    <div className="relative top-0 left-0 z-20 p-4">
-      <motion.div
-        initial={{ opacity: 0, x: -50, y: -50 }}
-        animate={{ opacity: 1,x: 0, y: 0 }}
-        transition={{ duration: 0.8, type: 'spring', stiffness: 100 }}
-        className="flex items-center gap-3 mt-6"
+    {/* Header with logo and back button */}
+    <div className="relative z-20 p-4 flex items-center justify-between">
+      {/* Back button */}
+      <Button 
+        variant="outline" 
+        onClick={handleBack} 
+        className="bg-green-800/40 text-white hover:bg-green-700/60 border-green-600"
       >
-        <Leaf className="h-12 w-12 text-green-400" />
-        <h1 className="text-6xl md:text-7xl font-extrabold text-white tracking-tight pointer-cursor">
+        <ChevronLeft className="mr-2 h-4 w-4" /> Back to Home
+      </Button>
+      
+      {/* Centered GreenTrace logo */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, type: 'spring', stiffness: 100 }}
+        className="flex items-center gap-3 absolute left-1/2 transform -translate-x-1/2"
+      >
+        <Leaf className="h-10 w-10 text-green-400" />
+        <h1 className="text-6xl font-extrabold text-white tracking-tight h-15">
           Green<span className="text-green-400">Trace</span>
         </h1>
       </motion.div>
+      
+      {/* Empty div to maintain spacing */}
+      <div className="w-32"></div>
     </div> 
-    <div>
-      <header>
-      <p className="text-white mt-6">
-      Recycle, Scan, Reward: A Smarter Way to Environmental Impact
-
-In today's world, individual actions can create meaningful change. Our QR-based recycling rewards system is designed to transform the way you think about waste management and environmental responsibility. By simply scanning QR codes on your recyclable items, you're not just disposing of waste – you're actively participating in a sustainable ecosystem that benefits both the environment and your personal rewards.
-
-How does our system work? Every time you recycle an eligible item, you'll use our mobile app to scan the unique QR code. This simple action tracks your recycling efforts, converting each scanned item into reward points. These points aren't just numbers – they're tangible benefits that can be redeemed at local businesses, donated to environmental causes, or used for discounts on eco-friendly products. We've gamified recycling to make sustainable living both easy and exciting.
-
-Our technology goes beyond individual rewards. By collecting detailed recycling data, we help municipalities and environmental organizations understand waste patterns, optimize recycling processes, and develop more effective sustainability strategies. Your small action of scanning a QR code contributes to a larger, data-driven approach to environmental conservation. We're not just creating a rewards program; we're building a community of conscious consumers committed to reducing waste.
-
-Environmental impact is at the heart of our mission. Traditional recycling often suffers from low participation and high contamination rates. Our QR system provides real-time feedback, educating users about proper recycling techniques and the specific environmental impact of their actions. Each scan comes with insights about how much energy, water, and raw materials are saved by recycling that particular item. We believe that when people understand the direct consequences of their choices, they're more likely to make sustainable decisions.
-
-Privacy and security are paramount in our approach. All user data is anonymized and encrypted, ensuring that your recycling information remains confidential. Our system is designed to protect your personal information while providing transparent, meaningful rewards. We collaborate with local governments, waste management facilities, and eco-conscious businesses to create a comprehensive, trustworthy recycling ecosystem.
-
-Join us in revolutionizing recycling. Every scan, every item, every point is a step towards a more sustainable future. Together, we can turn everyday waste into opportunities for personal reward and global environmental impact.
-      </p>
-      </header>
-    </div> 
+    
+    <div className="container mx-auto px-4 py-1 mt-5">
+      <Card className="bg-white/10 backdrop-blur-sm text-white border-green-600/30 shadow-xl">
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold text-green-400">GreenTrace: Recycle, Scan, Reward, <span className="text-white">A Smarter Way to Environmental Impact</span></CardTitle>
+          
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div>
+            <p className="mb-4">In today's world, individual actions can create meaningful change. Our QR-based recycling rewards system is designed to transform the way you think about waste management and environmental responsibility.</p>
+          </div>
+          
+          <div>
+            <h3 className="text-xl font-semibold text-green-300 mb-2">How It Works</h3>
+            <ul className="list-disc list-inside space-y-1 ml-4">
+              <li>Scan QR codes on recyclable items using our mobile app</li>
+              <li>Each scan tracks your recycling efforts and converts to reward points</li>
+              <li>Redeem points at local businesses, donate to environmental causes, or get discounts on eco-friendly products</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="text-xl font-semibold text-green-300 mb-2">Beyond Individual Rewards</h3>
+            <ul className="list-disc list-inside space-y-1 ml-4">
+              <li>We collect detailed recycling data to help municipalities and organizations</li>
+              <li>This data helps understand waste patterns and optimize recycling processes</li>
+              <li>Your participation contributes to data-driven environmental conservation</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="text-xl font-semibold text-green-300 mb-2">Environmental Impact</h3>
+            <ul className="list-disc list-inside space-y-1 ml-4">
+              <li>Our system addresses low participation and high contamination rates in traditional recycling</li>
+              <li>Get real-time feedback and education about proper recycling techniques</li>
+              <li>Learn about the specific environmental impact of your actions, including saved energy, water, and raw materials</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="text-xl font-semibold text-green-300 mb-2">Privacy & Security</h3>
+            <ul className="list-disc list-inside space-y-1 ml-4">
+              <li>All user data is anonymized and encrypted</li>
+              <li>Your recycling information remains confidential</li>
+              <li>We partner with local governments, waste management facilities, and eco-conscious businesses</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="text-xl font-semibold text-green-300 mb-2">Join Our Mission</h3>
+            <p className="mt-2">Every scan, every item, every point is a step towards a more sustainable future. Together, we can turn everyday waste into opportunities for personal reward and global environmental impact.</p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   </div>    
   )  
 }
