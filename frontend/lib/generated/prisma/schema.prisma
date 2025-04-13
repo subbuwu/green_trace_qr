@@ -1,0 +1,197 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  CONSUMER
+  BUSINESS
+}
+
+enum BusinessStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum WasteType {
+  PAPER
+  PLASTIC
+  GLASS
+  METAL
+  ELECTRONICS
+  ORGANIC
+  TEXTILE
+  HAZARDOUS
+  OTHER
+}
+
+model User {
+  id                   String    @id @default(uuid())
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  email                String    @unique
+  password             String
+  name                 String
+  phone                String?
+  avatar               String?
+  userType             UserType
+  verified             Boolean   @default(false)
+  verificationToken    String?
+  resetPasswordToken   String?
+  resetPasswordExpires DateTime?
+
+  // Relationships
+  consumer Consumer?
+  business Business?
+  sessions Session[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+
+  // Relationships
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Consumer {
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  userId         String   @unique
+  location       String?
+  points         Int      @default(0)
+  receiveUpdates Boolean  @default(false)
+
+  // Relationships
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  qrCodes          QRCode[]
+  recyclingHistory RecyclingHistory[]
+  rewards          RewardRedemption[]
+}
+
+model Business {
+  id                   String         @id @default(uuid())
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  userId               String         @unique
+  businessName         String
+  businessAddress      String
+  businessType         String
+  description          String?        @db.Text
+  logo                 String?
+  coverImage           String?
+  website              String?
+  socialLinks          Json? // Store as JSON object with platform keys
+  status               BusinessStatus @default(APPROVED) // Changed default to APPROVED for easier testing
+  verificationDocument String?
+  points               Int            @default(0)
+
+  // Relationships
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recyclingCenters RecyclingCenter[]
+  verifiedQrCodes  RecyclingHistory[]
+}
+
+model RecyclingCenter {
+  id                 String      @id @default(uuid())
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  businessId         String
+  name               String
+  address            String
+  latitude           Float?
+  longitude          Float?
+  operatingHours     Json? // Store as JSON with days and hours
+  phone              String?
+  email              String?
+  website            String?
+  image              String?
+  description        String?     @db.Text
+  acceptedWasteTypes WasteType[]
+  pointsPerWasteType Json? // Store as JSON mapping waste types to points
+  isActive           Boolean     @default(true)
+
+  // Relationships
+  business         Business           @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  recyclingHistory RecyclingHistory[]
+}
+
+model QRCode {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  consumerId  String
+  wasteType   WasteType
+  quantity    Float
+  unit        String // e.g., kg, lbs, pieces
+  description String?
+  photos      String[] // URLs to photos
+  qrCodeUrl   String
+  isVerified  Boolean   @default(false)
+
+  // Relationships
+  consumer         Consumer          @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+  recyclingHistory RecyclingHistory?
+}
+
+model RecyclingHistory {
+  id                String   @id @default(uuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  qrCodeId          String   @unique
+  consumerId        String
+  businessId        String
+  recyclingCenterId String
+  pointsEarned      Int
+  verifiedAt        DateTime @default(now())
+  notes             String?
+  staffName         String? // Name of staff who verified QR code
+  photo             String? // Optional photo of the item
+
+  // Relationships
+  qrCode          QRCode          @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+  consumer        Consumer        @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+  business        Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  recyclingCenter RecyclingCenter @relation(fields: [recyclingCenterId], references: [id], onDelete: Cascade)
+}
+
+model Reward {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  description String
+  pointsCost  Int
+  image       String?
+  isActive    Boolean  @default(true)
+  quantity    Int? // null means unlimited
+
+  // Relationships
+  redemptions RewardRedemption[]
+}
+
+model RewardRedemption {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  consumerId  String
+  rewardId    String
+  pointsSpent Int
+  status      String // PENDING, APPROVED, REJECTED, REDEEMED
+  redeemedAt  DateTime?
+
+  // Relationships
+  consumer Consumer @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+  reward   Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+}
