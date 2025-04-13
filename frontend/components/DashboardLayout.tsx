@@ -122,7 +122,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     },
     {
       title: "Rewards & Leaderboard",
-      url: "/dashboard/rewards",
+      url: "/dashboard/rankings",
       icon: Award,
     },
   ];

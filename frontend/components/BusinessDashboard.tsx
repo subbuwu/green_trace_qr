@@ -575,7 +575,7 @@ export default function BusinessDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="shadow-sm hover:bg-blue-50">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Total Points</CardTitle>
+                  <CardTitle className="text-sm font-medium text-gray-500">Total Verified Orders</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">{user.profile.points}</div>
