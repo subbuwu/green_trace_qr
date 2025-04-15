@@ -284,7 +284,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/subbu/Desktop/Projects/green_trace_qr/frontend/lib/generated/prisma",
+      "value": "C:\\Users\\91805\\Desktop\\GreenTrace\\frontend\\lib\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -293,12 +293,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/subbu/Desktop/Projects/green_trace_qr/frontend/prisma/schema.prisma",
+    "sourceFilePath": "C:\\Users\\91805\\Desktop\\GreenTrace\\frontend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
