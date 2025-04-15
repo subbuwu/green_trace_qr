@@ -1,4 +1,3 @@
-// app/api/rewards/redeem/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { getCurrentUser } from '@/lib/auth-helpers';
@@ -75,24 +74,24 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Use a transaction to ensure data consistency
-    const [updatedConsumer, redemption] = await prisma.$transaction([
+    // Fix: Use interactive transaction instead of transaction array with Promise.resolve
+    const result = await prisma.$transaction(async (tx) => {
       // Update consumer points
-      prisma.consumer.update({
+      const updatedConsumer = await tx.consumer.update({
         where: { id: consumer.id },
         data: { points: { decrement: reward.pointsCost } }
-      }),
+      });
       
       // Update reward quantity if applicable
-      reward.quantity !== null ? 
-        prisma.reward.update({
+      if (reward.quantity !== null) {
+        await tx.reward.update({
           where: { id: reward.id },
           data: { quantity: { decrement: 1 } }
-        }) : 
-        Promise.resolve(reward),
+        });
+      }
       
       // Create redemption record
-      prisma.rewardRedemption.create({
+      const redemption = await tx.rewardRedemption.create({
         data: {
           consumerId: consumer.id,
           rewardId: reward.id,
@@ -106,25 +105,27 @@ export async function POST(request: NextRequest) {
             }
           }
         }
-      })
-    ]);
+      });
+      
+      return { updatedConsumer, redemption };
+    });
     
     // Format the redemption response
     const redemptionResponse = {
-      id: redemption.id,
-      createdAt: redemption.createdAt.toISOString(),
-      rewardId: redemption.rewardId,
-      rewardName: redemption.reward.name,
-      pointsSpent: redemption.pointsSpent,
-      status: redemption.status,
-      redeemedAt: redemption.redeemedAt ? redemption.redeemedAt.toISOString() : null
+      id: result.redemption.id,
+      createdAt: result.redemption.createdAt.toISOString(),
+      rewardId: result.redemption.rewardId,
+      rewardName: result.redemption.reward.name,
+      pointsSpent: result.redemption.pointsSpent,
+      status: result.redemption.status,
+      redeemedAt: result.redemption.redeemedAt ? result.redemption.redeemedAt.toISOString() : null
     };
     
     return NextResponse.json({
       success: true,
       message: 'Reward redeemed successfully',
       redemption: redemptionResponse,
-      currentPoints: updatedConsumer.points
+      currentPoints: result.updatedConsumer.points
     });
   } catch (error) {
     console.error('Error redeeming reward:', error);
